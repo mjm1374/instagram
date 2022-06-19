@@ -1,25 +1,26 @@
-import logo from './logo.svg';
+import { useEffect, useState } from 'react';
+import instagram from './api/instagram';
 import './App.css';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+	const [photos, setPhotos] = useState([]);
+
+	useEffect(() => {
+		const fetchFeed = async () => {
+			const request = await instagram.get(`/standings`, {
+				params: {
+					fields: 'id,caption, media_type, media_url,permalink, thumbnail_url, timestamp, username',
+					access_token: `${process.env.REACT_APP_FOOTBALL_API}`,
+				},
+			});
+			setPhotos(...request);
+			console.log(request);
+		};
+
+		fetchFeed();
+	}, []);
+
+	return <div className='App'>Instagram </div>;
 }
 
 export default App;
